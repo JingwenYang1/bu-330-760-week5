@@ -21,6 +21,7 @@ The user should provide:
 - Rarity tiers and their drop rates (must sum to 100%)
 - Cost per pull in dollars
 - Target rarity to simulate for
+- Number of copies to collect (optional, defaults to 1)
 
 If the user does not specify rates, use these defaults:
 - N (Normal): 40%
@@ -32,12 +33,13 @@ If the user does not specify rates, use these defaults:
 
 ## Step-by-step instructions
 
-1. Confirm the rarity tiers, drop rates, cost per pull, and target rarity with the user.
+1. Confirm the rarity tiers, drop rates, cost per pull, target rarity, and desired count with the user.
 2. Run the simulation script:
-python .agents/skills/gacha-simulator/scripts/simulate.py 
---rates "N:40,R:30,SR:20,SSR:9,UR:1" 
---cost 6 
---target UR 
+python .agents/skills/gacha-simulator/scripts/simulate.py
+--rates "N:40,R:30,SR:20,SSR:9,UR:1"
+--cost 6
+--target UR
+--count 1
 --simulations 10000
 3. The script outputs a JSON object. Read the JSON and present the results to the user in natural language.
 

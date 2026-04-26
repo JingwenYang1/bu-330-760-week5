@@ -27,17 +27,19 @@ def validate_rates(tiers: dict) -> None:
             sys.exit(1)
 
 
-def simulate_once(names: list, weights: list, target: str) -> int:
-    """Simulate pulls until the target rarity is hit. Return pull count."""
+def simulate_once(names: list, weights: list, target: str, count: int) -> int:
+    """Simulate pulls until the target rarity is hit `count` times. Return pull count."""
     pulls = 0
-    while True:
+    hits = 0
+    while hits < count:
         pulls += 1
         result = random.choices(names, weights=weights, k=1)[0]
         if result == target:
-            return pulls
+            hits += 1
+    return pulls
 
 
-def run_simulation(tiers: dict, target: str, cost: float, n_sims: int) -> dict:
+def run_simulation(tiers: dict, target: str, cost: float, n_sims: int, count: int) -> dict:
     """Run n_sims simulations and return statistics."""
     if target not in tiers:
         return {"error": f"Target '{target}' not in tiers. Available: {list(tiers.keys())}"}
@@ -45,7 +47,7 @@ def run_simulation(tiers: dict, target: str, cost: float, n_sims: int) -> dict:
     names = list(tiers.keys())
     weights = [tiers[n] for n in names]
 
-    results = [simulate_once(names, weights, target) for _ in range(n_sims)]
+    results = [simulate_once(names, weights, target, count) for _ in range(n_sims)]
     results.sort()
 
     avg = sum(results) / len(results)
@@ -56,6 +58,7 @@ def run_simulation(tiers: dict, target: str, cost: float, n_sims: int) -> dict:
 
     return {
         "target_rarity": target,
+        "target_count": count,
         "drop_rate_percent": tiers[target],
         "cost_per_pull": cost,
         "simulations": n_sims,
@@ -75,12 +78,13 @@ def main():
     parser.add_argument("--cost", type=float, required=True, help="Cost per pull in dollars")
     parser.add_argument("--target", required=True, help="Target rarity to simulate for")
     parser.add_argument("--simulations", type=int, default=10000, help="Number of simulations to run")
+    parser.add_argument("--count", type=int, default=1, help="Number of copies of the target rarity to collect")
     args = parser.parse_args()
 
     tiers = parse_rates(args.rates)
     validate_rates(tiers)
 
-    result = run_simulation(tiers, args.target, args.cost, args.simulations)
+    result = run_simulation(tiers, args.target, args.cost, args.simulations, args.count)
     print(json.dumps(result, indent=2))
 
 
