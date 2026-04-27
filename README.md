@@ -27,3 +27,4 @@ The skill was correctly discovered and activated by Claude Code in all three tes
 The script assumes each pull is fully independent. It does not model pity systems, banners, duplicate protection, or guaranteed pulls, which most real gacha games use. The simulation is statistical, not a guarantee, and results vary between runs. For real spending decisions, players should use game-specific calculators.
 
 ## Walkthrough Video
+https://youtu.be/dTkx94PbDgI
